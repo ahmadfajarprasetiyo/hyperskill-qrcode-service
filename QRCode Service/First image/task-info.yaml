@@ -99,6 +99,37 @@ files:
     \        } catch (NoSuchAlgorithmException e) {\n            throw new RuntimeException(e);\n\
     \        }\n    }\n}\n"
     learner_created: false
+  - name: src/qrcodeapi/Controller.java
+    visible: true
+    text: |
+      package qrcodeapi;
+      
+      import org.springframework.http.HttpStatus;
+      import org.springframework.http.ResponseEntity;
+      import org.springframework.web.bind.annotation.*;
+      
+      @RestController
+      public class Controller {
+      
+          @GetMapping("/api/health")
+          public ResponseEntity<Object> health() {
+              return new ResponseEntity<>(HttpStatus.OK);
+          }
+      
+          @GetMapping("/api/qrcode")
+          public ResponseEntity<Object> qrcode() {
+              return new ResponseEntity<>(HttpStatus.NOT_IMPLEMENTED);
+          }
+      
+      
+      }
+    learner_created: true
+  - name: src/qrcodeapi/AppConfig.java
+    visible: true
+    learner_created: true
 feedback_link: https://hyperskill.org/projects/385/stages/2291/implement#comment
-status: Unchecked
+status: Solved
+feedback:
+  message: Congratulations!
+  time: "Wed, 14 Feb 2024 06:46:15 UTC"
 record: -1
