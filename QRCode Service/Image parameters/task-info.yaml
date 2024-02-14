@@ -123,6 +123,73 @@ files:
     \     } catch (NoSuchAlgorithmException e) {\n            throw new RuntimeException(e);\n\
     \        }\n    }\n}\n"
     learner_created: false
+  - name: src/qrcodeapi/Controller.java
+    visible: true
+    text: |
+      package qrcodeapi;
+      
+      import org.springframework.http.HttpStatus;
+      import org.springframework.http.MediaType;
+      import org.springframework.http.ResponseEntity;
+      import org.springframework.web.bind.annotation.*;
+      
+      import java.awt.*;
+      import java.awt.image.BufferedImage;
+      
+      @RestController
+      public class Controller {
+      
+          @GetMapping("/api/health")
+          public ResponseEntity<Object> health() {
+              return new ResponseEntity<>(HttpStatus.OK);
+          }
+      
+          @GetMapping(value = "/api/qrcode", produces = MediaType.IMAGE_PNG_VALUE)
+          public ResponseEntity<BufferedImage> qrcode() {
+              int width = 250;
+              int height = 250;
+              BufferedImage bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+              Graphics2D g = bufferedImage.createGraphics();
+      
+              g.setColor(Color.WHITE);
+              g.fillRect(0, 0, width, height);
+              return ResponseEntity
+                      .ok()
+                      .contentType(MediaType.IMAGE_PNG)
+                      .body(bufferedImage);
+          }
+      
+      
+      }
+    learner_created: true
+  - name: src/qrcodeapi/AppConfig.java
+    visible: true
+    text: |
+      package qrcodeapi;
+      
+      import org.springframework.context.annotation.*;
+      import org.springframework.http.converter.BufferedImageHttpMessageConverter;
+      import org.springframework.http.converter.HttpMessageConverter;
+      
+      import java.awt.image.BufferedImage;
+      
+      @Configuration
+      public class AppConfig {
+          @Bean
+          public HttpMessageConverter<BufferedImage> bufferedImageHttpMessageConverter() {
+              return new BufferedImageHttpMessageConverter();
+          }
+      }
+    learner_created: true
+  - name: src/qrcodeapi/ErrorResponse.java
+    visible: true
+    learner_created: true
+  - name: src/qrcodeapi/ControllerExceptionHandler.java
+    visible: true
+    learner_created: true
 feedback_link: https://hyperskill.org/projects/385/stages/2292/implement#comment
-status: Unchecked
+status: Solved
+feedback:
+  message: Congratulations!
+  time: "Wed, 14 Feb 2024 07:41:25 UTC"
 record: -1

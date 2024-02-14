@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.List;
 
 @RestController
 public class Controller {
@@ -16,18 +17,31 @@ public class Controller {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @GetMapping(value = "/api/qrcode", produces = MediaType.IMAGE_PNG_VALUE)
-    public ResponseEntity<BufferedImage> qrcode() {
-        int width = 250;
-        int height = 250;
-        BufferedImage bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+    @GetMapping("/api/qrcode")
+    public ResponseEntity<BufferedImage> qrcode(@RequestParam(required = false, name = "size") Integer size, @RequestParam(required = false, name = "type") String type) {
+        List<String> validType = List.of("png", "jpeg", "gif");
+        if (size == null || size < 150 || size > 350) {
+            throw new RuntimeException("Image size must be between 150 and 350 pixels");
+        }
+
+        if (type == null || !validType.contains(type)) {
+            throw new RuntimeException("Only png, jpeg and gif image types are supported");
+        }
+        BufferedImage bufferedImage = new BufferedImage(size, size, BufferedImage.TYPE_INT_RGB);
         Graphics2D g = bufferedImage.createGraphics();
 
         g.setColor(Color.WHITE);
-        g.fillRect(0, 0, width, height);
+        g.fillRect(0, 0, size, size);
+
+        MediaType mediaType = MediaType.IMAGE_PNG;
+        if (type.equals("jpeg")) {
+            mediaType = MediaType.IMAGE_JPEG;
+        } else if (type.equals("gif")) {
+            mediaType = MediaType.IMAGE_GIF;
+        }
         return ResponseEntity
                 .ok()
-                .contentType(MediaType.IMAGE_PNG)
+                .contentType(mediaType)
                 .body(bufferedImage);
     }
 
