@@ -127,7 +127,7 @@ files:
   - name: src/qrcodeapi/AppConfig.java
     visible: true
     learner_created: true
-feedback_link: https://hyperskill.org/projects/385/stages/2291/implement#comment
+feedback_link: https://hyperskill.org/learn/step/35506#comment
 status: Solved
 feedback:
   message: Congratulations!

@@ -141,6 +141,129 @@ files:
     \        }\n    }\n\n    private String encodeUrl(String param) {\n        return\
     \ URLEncoder.encode(param, StandardCharsets.UTF_8);\n    }\n}\n"
     learner_created: false
-feedback_link: https://hyperskill.org/projects/385/stages/2293/implement#comment
-status: Unchecked
+  - name: src/qrcodeapi/ControllerExceptionHandler.java
+    visible: true
+    text: |
+      package qrcodeapi;
+      
+      import org.springframework.http.HttpStatus;
+      import org.springframework.http.HttpStatusCode;
+      import org.springframework.http.ResponseEntity;
+      import org.springframework.web.bind.annotation.ControllerAdvice;
+      import org.springframework.web.bind.annotation.ExceptionHandler;
+      
+      @ControllerAdvice
+      public class ControllerExceptionHandler {
+          @ExceptionHandler(RuntimeException.class)
+          public ResponseEntity<ErrorResponse> handleRuntimeException(RuntimeException e) {
+      
+              ErrorResponse body = new ErrorResponse(e.getMessage());
+              HttpStatusCode httpCode = HttpStatus.BAD_REQUEST;
+      
+              return new ResponseEntity<>(body, httpCode);
+          }
+      }
+    learner_created: true
+  - name: src/qrcodeapi/Controller.java
+    visible: true
+    text: |
+      package qrcodeapi;
+      
+      import org.springframework.http.HttpStatus;
+      import org.springframework.http.MediaType;
+      import org.springframework.http.ResponseEntity;
+      import org.springframework.web.bind.annotation.*;
+      
+      import java.awt.*;
+      import java.awt.image.BufferedImage;
+      import java.util.List;
+      
+      @RestController
+      public class Controller {
+      
+          @GetMapping("/api/health")
+          public ResponseEntity<Object> health() {
+              return new ResponseEntity<>(HttpStatus.OK);
+          }
+      
+          @GetMapping("/api/qrcode")
+          public ResponseEntity<BufferedImage> qrcode(@RequestParam(required = false, name = "size") Integer size, @RequestParam(required = false, name = "type") String type) {
+              List<String> validType = List.of("png", "jpeg", "gif");
+              if (size == null || size < 150 || size > 350) {
+                  throw new RuntimeException("Image size must be between 150 and 350 pixels");
+              }
+      
+              if (type == null || !validType.contains(type)) {
+                  throw new RuntimeException("Only png, jpeg and gif image types are supported");
+              }
+      
+              QRCodeWriter writer = new QRCodeWriter();
+              try {
+                  BitMatrix bitMatrix = writer.encode(data, BarcodeFormat.QR_CODE, width, height);
+                  BufferedImage bufferedImage = MatrixToImageWriter.toBufferedImage(bitMatrix);
+              } catch (WriterException e) {
+                  // handle the WriterException
+              }
+      
+              BufferedImage bufferedImage = new BufferedImage(size, size, BufferedImage.TYPE_INT_RGB);
+              Graphics2D g = bufferedImage.createGraphics();
+      
+              g.setColor(Color.WHITE);
+              g.fillRect(0, 0, size, size);
+      
+              MediaType mediaType = MediaType.IMAGE_PNG;
+              if (type.equals("jpeg")) {
+                  mediaType = MediaType.IMAGE_JPEG;
+              } else if (type.equals("gif")) {
+                  mediaType = MediaType.IMAGE_GIF;
+              }
+              return ResponseEntity
+                      .ok()
+                      .contentType(mediaType)
+                      .body(bufferedImage);
+          }
+      
+      
+      }
+    learner_created: true
+  - name: src/qrcodeapi/AppConfig.java
+    visible: true
+    text: |
+      package qrcodeapi;
+      
+      import org.springframework.context.annotation.*;
+      import org.springframework.http.converter.BufferedImageHttpMessageConverter;
+      import org.springframework.http.converter.HttpMessageConverter;
+      
+      import java.awt.image.BufferedImage;
+      
+      @Configuration
+      public class AppConfig {
+          @Bean
+          public HttpMessageConverter<BufferedImage> bufferedImageHttpMessageConverter() {
+              return new BufferedImageHttpMessageConverter();
+          }
+      }
+    learner_created: true
+  - name: src/qrcodeapi/ErrorResponse.java
+    visible: true
+    text: |
+      package qrcodeapi;
+      
+      public class ErrorResponse {
+          private final String error;
+      
+          ErrorResponse(String error) {
+              this.error = error;
+          }
+          public String getError() {
+              return error;
+          }
+      }
+    learner_created: true
+feedback_link: https://hyperskill.org/learn/step/35508#comment
+status: Solved
+feedback:
+  message: Congratulations!
+  time: "Wed, 14 Feb 2024 08:42:53 UTC"
 record: -1

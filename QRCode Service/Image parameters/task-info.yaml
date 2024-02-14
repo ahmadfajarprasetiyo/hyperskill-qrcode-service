@@ -187,9 +187,9 @@ files:
   - name: src/qrcodeapi/ControllerExceptionHandler.java
     visible: true
     learner_created: true
-feedback_link: https://hyperskill.org/projects/385/stages/2292/implement#comment
+feedback_link: https://hyperskill.org/learn/step/35507#comment
 status: Solved
 feedback:
   message: Congratulations!
   time: "Wed, 14 Feb 2024 07:41:25 UTC"
-record: -1
+record: 3

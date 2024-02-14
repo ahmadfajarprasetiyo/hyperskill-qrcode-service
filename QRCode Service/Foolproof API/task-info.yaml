@@ -153,6 +153,6 @@ files:
     \        }\n    }\n\n    private String encodeUrl(String param) {\n        return\
     \ URLEncoder.encode(param, StandardCharsets.UTF_8);\n    }\n}\n"
     learner_created: false
-feedback_link: https://hyperskill.org/projects/385/stages/2294/implement#comment
+feedback_link: https://hyperskill.org/learn/step/35509#comment
 status: Unchecked
 record: -1
